@@ -1,6 +1,5 @@
 from tkinter import *
 import tkinter.messagebox as m
-from winreg import QueryValue
 import mysql.connector
 
 
