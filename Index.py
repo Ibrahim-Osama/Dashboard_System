@@ -1,3 +1,4 @@
+from pickle import GLOBAL
 from tkinter import *
 import tkinter.messagebox as m
 import mysql.connector
@@ -152,10 +153,8 @@ def All_page():
             b1 = Button( Home, text='Update' ,width=15 ,height=1,bg='green',fg='white')
             b1.pack( pady=10)
             b1 = Button( Home, text='Delete My Acc' ,width=15 ,height=1,bg='green',fg='white')
-            
             b1.pack( pady=10)
             b1 = Button( Home, text='Log_Out' ,width=15 ,height=1,bg='green',fg='white')
-            
             b1.pack( pady=10)
             Login.destroy()
       
@@ -210,8 +209,10 @@ def All_page():
         e2 = Entry(Login , fg='red', show="*")
         e2.pack(pady=5)
         b1 = Button( Login, text='Submit' ,width=15 ,height=1,bg='green',fg='white' ,command=insertdata)
+        
         b1.pack( pady=10)
         b2 = Button( Login, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
+        
         b2.pack(pady=110)
 
         w.destroy()
