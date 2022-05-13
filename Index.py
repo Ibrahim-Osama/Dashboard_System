@@ -145,6 +145,15 @@ def All_page():
             Home.geometry('300x400') 
             def Destorypage():
               Home.destroy()
+            
+            def updatedata():
+                New_Email = e1.get()
+                mycursorObject=my.cursor()
+                Querycode = f"UPDATE users SET users.email = '{New_Email}' WHERE users.username = '{name}'"
+                mycursorObject.execute(Querycode)
+                my.commit()
+                m.showinfo("Done","Password successfully changed")
+
             def deletedata():
                 answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
                 if answer == TRUE:
@@ -160,7 +169,7 @@ def All_page():
 
             e1 = Entry(Home , fg='red')
             e1.pack(pady=5)
-            b1 = Button( Home, text='Update' ,width=15 ,height=1,bg='green',fg='white')
+            b1 = Button( Home, text='Update' ,width=15 ,height=1,bg='green',fg='white',command=updatedata)
             b1.pack( pady=10)
             b1 = Button( Home, text='Delete My Acc' ,width=15 ,height=1,bg='green',fg='white',command=deletedata)
             b1.pack( pady=10)
@@ -217,8 +226,10 @@ def All_page():
         label2.pack()
         label2.configure(font=("Segoe UI", 10, "italic"))
         e2 = Entry(Login , fg='red', show="*")
+        
         e2.pack(pady=5)
         b1 = Button( Login, text='Submit' ,width=15 ,height=1,bg='green',fg='white' ,command=insertdata)
+        
         b1.pack( pady=10)
         b2 = Button( Login, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
         b2.pack(pady=110)
