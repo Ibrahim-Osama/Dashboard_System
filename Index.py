@@ -138,7 +138,8 @@ def All_page():
 
 
     def Login_page():
-        def Home_page():     
+        def Home_page(Username):  
+            print(Username)   
             Home = Tk()
             Home.title(string='Home Page')
             Home.geometry('300x400') 
@@ -177,7 +178,7 @@ def All_page():
                 for passw in mycursorObject1:
                  if passw == (f'{password}',):
                      print("yes pass")
-                     Home_page()
+                     Home_page(username)
                      break 
                     
         #         
@@ -208,10 +209,8 @@ def All_page():
         e2 = Entry(Login , fg='red', show="*")
         e2.pack(pady=5)
         b1 = Button( Login, text='Submit' ,width=15 ,height=1,bg='green',fg='white' ,command=insertdata)
-        
         b1.pack( pady=10)
         b2 = Button( Login, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
-        
         b2.pack(pady=110)
 
         w.destroy()
@@ -222,6 +221,7 @@ def All_page():
     label1.configure(font=("Courier", 16, "italic"))
 
 
+    
 
     b1 = Button( w, text='Login' ,width=20,height=5 ,bg='green',fg='white' , command=Login_page).grid(pady=15)
     b2 = Button( w, text='Register' ,width=20 ,height=5,bg='green',fg='white' ,command=Register_page).grid()
