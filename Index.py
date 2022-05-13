@@ -139,12 +139,22 @@ def All_page():
 
     def Login_page():
         def Home_page(Username):  
-            print(Username)   
+            name = Username
             Home = Tk()
             Home.title(string='Home Page')
             Home.geometry('300x400') 
-
-            label1 = Label(Home,text='Change Your UserName')
+            def Destorypage():
+              Home.destroy()
+            def deletedata():
+                answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
+                if answer == TRUE:
+                 mycursorObject=my.cursor()
+                 Querycode = f"DELETE FROM users WHERE users.username = '{name}'"
+                 mycursorObject.execute(Querycode)
+                 my.commit()
+                 Home.destroy()
+                 All_page()
+            label1 = Label(Home,text='Change Your Email')
             label1.pack()
             label1.configure(font=("Segoe UI", 10, "italic"))
 
@@ -152,9 +162,9 @@ def All_page():
             e1.pack(pady=5)
             b1 = Button( Home, text='Update' ,width=15 ,height=1,bg='green',fg='white')
             b1.pack( pady=10)
-            b1 = Button( Home, text='Delete My Acc' ,width=15 ,height=1,bg='green',fg='white')
+            b1 = Button( Home, text='Delete My Acc' ,width=15 ,height=1,bg='green',fg='white',command=deletedata)
             b1.pack( pady=10)
-            b1 = Button( Home, text='Log_Out' ,width=15 ,height=1,bg='green',fg='white')
+            b1 = Button( Home, text='Log_Out' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
             b1.pack( pady=10)
             Login.destroy()
       
@@ -221,7 +231,6 @@ def All_page():
     label1.configure(font=("Courier", 16, "italic"))
 
 
-    
 
     b1 = Button( w, text='Login' ,width=20,height=5 ,bg='green',fg='white' , command=Login_page).grid(pady=15)
     b2 = Button( w, text='Register' ,width=20 ,height=5,bg='green',fg='white' ,command=Register_page).grid()
