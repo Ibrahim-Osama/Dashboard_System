@@ -1,4 +1,3 @@
-from pickle import GLOBAL
 from tkinter import *
 import tkinter.messagebox as m
 import mysql.connector
