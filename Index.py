@@ -14,15 +14,48 @@ import mysql.connector
 
 # WHERE users.id = ( SELECT MAX(users.id)FROM users);
 
+# CREATE TABLE users ( id INT(6) AUTO_INCREMENT PRIMARY KEY null, username VARCHAR(30) NOT NULL UNIQUE, password VARCHAR(30) NOT NULL, email VARCHAR(50) );
+# SELECT MAX(id) FROM users;
+
+# for x in mycursorObject:
+#  print (x)
+
+# UPDATE users
+# SET `password` = 2
+
+# WHERE users.id = ( SELECT MAX(users.id)FROM users);
+
+# UPDATE users
+# SET `password` = 2
+
+# WHERE users.id = ( SELECT MAX(users.id)FROM users);
+
 
 def All_page():
     my = mysql.connector.connect(  
     host  = "localhost",
     user = "root",
     password = "",
-    database = "dashboard"
+  
 
 )
+    
+    try:
+        mycursorObject=my.cursor()
+        Querycode = "create database dashboard"
+        mycursorObject.execute(Querycode)
+        my.commit()
+
+    except mysql.connector.errors.DatabaseError:
+        print("database")
+    try:
+            mycursorObject1=my.cursor()
+            Querycode1 = "CREATE TABLE dashboard.users ( id INT(6) AUTO_INCREMENT PRIMARY KEY null, username VARCHAR(30) NOT NULL UNIQUE, password VARCHAR(30) NOT NULL, email VARCHAR(50))"
+            mycursorObject.execute(Querycode1)
+            my.commit()
+    except:
+            print("found table")
+
 
     w = Tk()
     w.title(string='Dashboard')
@@ -40,7 +73,7 @@ def All_page():
             def updatedata():
                 newpassword = e1.get()
                 mycursorObject=my.cursor()
-                Querycode = f"UPDATE users SET users.password = '{newpassword}' WHERE users.id = ( SELECT MAX(users.id)FROM users)"
+                Querycode = f"UPDATE dashboard.users SET users.password = '{newpassword}' WHERE dashboard.users.id = ( SELECT MAX(users.id)FROM dashboard.users)"
                 mycursorObject.execute(Querycode)
                 my.commit()
 
@@ -49,7 +82,7 @@ def All_page():
                 answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
                 if answer == TRUE:
                  mycursorObject=my.cursor()
-                 Querycode = "DELETE FROM users WHERE users.id = ( SELECT MAX(users.id)FROM users)"
+                 Querycode = "DELETE FROM dashboard.users WHERE users.id = ( SELECT MAX(dashboard.users.id)FROM dashboard.users)"
                  mycursorObject.execute(Querycode)
                  my.commit()
 
@@ -85,7 +118,7 @@ def All_page():
                 email = e4.get()
 
                 if(password == confrimpassword):    
-                 Querycode = f"INSERT INTO users(username,password,email)VALUES('{username}','{password}','{email}')"
+                 Querycode = f"INSERT INTO dashboard.users(username,password,email)VALUES('{username}','{password}','{email}')"
                  mycursorObject.execute(Querycode)
 
                  my.commit()
@@ -102,6 +135,7 @@ def All_page():
         def Destorypage():
             Regist.destroy()
 
+
         label1 = Label(Regist,text='Enter Your UserName')
         label1.pack()
         label1.configure(font=("Segoe UI", 10, "italic"))
@@ -116,11 +150,13 @@ def All_page():
         e2 = Entry(Regist , fg='red', show="*")
         e2.pack(pady=5)
       
+      
         label3 = Label(Regist,text='Enter Con_Password')
         label3.pack()
         label3.configure(font=("Segoe UI", 10, "italic"))
         e3 = Entry(Regist , fg='red', show="*")
         e3.pack(pady=5)
+
 
         label4 = Label(Regist,text='Enter Your E-mail')
      
@@ -149,7 +185,7 @@ def All_page():
             def updatedata():
                 New_Email = e1.get()
                 mycursorObject=my.cursor()
-                Querycode = f"UPDATE users SET users.email = '{New_Email}' WHERE users.username = '{name}'"
+                Querycode = f"UPDATE dashboard.users SET users.email = '{New_Email}' WHERE dashboard.users.username = '{name}'"
                 mycursorObject.execute(Querycode)
                 my.commit()
                 m.showinfo("Done","Password successfully changed")
@@ -158,7 +194,7 @@ def All_page():
                 answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
                 if answer == TRUE:
                  mycursorObject=my.cursor()
-                 Querycode = f"DELETE FROM users WHERE users.username = '{name}'"
+                 Querycode = f"DELETE FROM dashboard.users WHERE dashboard.users.username = '{name}'"
                  mycursorObject.execute(Querycode)
                  my.commit()
                  Home.destroy()
@@ -187,12 +223,12 @@ def All_page():
                 username =  e1.get()
                 password= e2.get()
 
-                Querycode ='Select username from users'
+                Querycode ='Select username from dashboard.users'
                 mycursorObject.execute(Querycode)
                 for User in mycursorObject:
                  if User == (f'{username}',):
                      print("yes user")
-                Querycode1 ='Select password from users'
+                Querycode1 ='Select password from dashboard.users'
                 mycursorObject1.execute(Querycode1)
                 for passw in mycursorObject1:
                  if passw == (f'{password}',):
@@ -204,6 +240,21 @@ def All_page():
         #         else:
         #           m.showwarning("Match_Password","write Same Password")
         #   except mysql.connector.errors.IntegrityError:
+        #       m.showerror("Not Allow","This UserName Is Used")
+
+
+        
+        #         else:
+        #         else:
+        #         else:
+        #           m.showwarning("Match_Password","write Same Password")
+        #           m.showwarning("Match_Password","write Same Password")
+        #           m.showwarning("Match_Password","write Same Password")
+        #   except mysql.connector.errors.IntegrityError:
+        #   except mysql.connector.errors.IntegrityError:
+        #   except mysql.connector.errors.IntegrityError:
+        #       m.showerror("Not Allow","This UserName Is Used")
+        #       m.showerror("Not Allow","This UserName Is Used")
         #       m.showerror("Not Allow","This UserName Is Used")
 
 
@@ -226,13 +277,12 @@ def All_page():
         label2.pack()
         label2.configure(font=("Segoe UI", 10, "italic"))
         e2 = Entry(Login , fg='red', show="*")
-        
         e2.pack(pady=5)
         b1 = Button( Login, text='Submit' ,width=15 ,height=1,bg='green',fg='white' ,command=insertdata)
-        
         b1.pack( pady=10)
         b2 = Button( Login, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
         b2.pack(pady=110)
+
 
         w.destroy()
 
@@ -246,5 +296,6 @@ def All_page():
     b1 = Button( w, text='Login' ,width=20,height=5 ,bg='green',fg='white' , command=Login_page).grid(pady=15)
     b2 = Button( w, text='Register' ,width=20 ,height=5,bg='green',fg='white' ,command=Register_page).grid()
 
+    
     w.mainloop()
 All_page()
