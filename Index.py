@@ -50,7 +50,9 @@ try:
             print("database")
         try:
                 mycursorObject1=my.cursor()
-                Querycode1 = "CREATE TABLE dashboard.users ( id INT(6) AUTO_INCREMENT PRIMARY KEY null, username VARCHAR(30) NOT NULL UNIQUE, password VARCHAR(30) NOT NULL, email VARCHAR(50))"
+                Querycode0 = "CREATE TABLE dashboard.users ( id INT(6) AUTO_INCREMENT PRIMARY KEY null, username VARCHAR(30) NOT NULL UNIQUE, password VARCHAR(30) NOT NULL, email VARCHAR(50) , usertype varchar(30) DEFAULT 'false' );"
+                Querycode1 = "INSERT INTO dashboard.users(username,password,email,usertype)VALUES('Admin','1','@AdminDashboard','True')"
+                mycursorObject.execute(Querycode0)
                 mycursorObject.execute(Querycode1)
                 my.commit()
         except:
@@ -182,6 +184,7 @@ try:
                 def Destorypage():
                   Home.destroy()
 
+
                 def updatedata():
                     New_Email = e1.get()
                     mycursorObject=my.cursor()
@@ -189,6 +192,7 @@ try:
                     mycursorObject.execute(Querycode)
                     my.commit()
                     m.showinfo("Done","Password successfully changed")
+
 
                 def deletedata():
                     answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
@@ -203,6 +207,7 @@ try:
                 label1.pack()
                 label1.configure(font=("Segoe UI", 10, "italic"))
 
+
                 e1 = Entry(Home , fg='red')
                 e1.pack(pady=5)
                 b1 = Button( Home, text='Update' ,width=15 ,height=1,bg='green',fg='white',command=updatedata)
@@ -213,6 +218,7 @@ try:
                 b1.pack( pady=10)
                 Login.destroy()
 
+
             def insertdata():
             #   try:
                if(e1.get() =='' or e2.get()==''):
@@ -220,22 +226,109 @@ try:
                else: 
                     mycursorObject=my.cursor()
                     mycursorObject1=my.cursor()
+                    mycursor = my.cursor()
                     username =  e1.get()
                     password= e2.get()
+
 
                     Querycode ='Select username from dashboard.users'
                     mycursorObject.execute(Querycode)
                     for User in mycursorObject:
-                     if User == (f'{username}',):
+                      if User == (f'{username}',):
                          print("yes user")
-                    Querycode1 ='Select password from dashboard.users'
+                         
+                    #  else:
+                    #      m.showinfo("User Not_Found" ,"This User Is wrong")  
+                    Querycode1 ="SELECT password FROM dashboard.users"
                     mycursorObject1.execute(Querycode1)
                     for passw in mycursorObject1:
-                     if passw == (f'{password}',):
+                      if passw == (f'{password}',):
                          print("yes pass")
-                         Home_page(username)
-                         break 
-                     
+                        
+
+                          
+                    #   else:
+                    #      m.showinfo("Wrong Password" ,"This Password Is wrong")
+                    mycursor.execute("SELECT username , password , usertype FROM dashboard.users")
+
+                    myresult = mycursor.fetchall()
+                    
+                    for User in myresult:
+                     if User[0] == username  and User[1]==password and User[2] == 'false':
+                           Home_page(username)
+                           break
+                     elif(User[0] == username  and User[1]==password and User[2] == 'True'):
+                         adminboard()
+                         Login.destroy()
+                         break
+                    else:
+                       m.showerror('something is wrong ',' User or password Is wrong') 
+
+
+
+            def adminboard():
+                admin = Tk()
+                admin.title(string='Home Page')
+                admin.geometry('600x600') 
+
+
+
+                l1 = Label(admin , text='Welcome to admin dashboard')
+                l1.pack()
+
+                l2 = Label(admin , text='Enter any user_Id')
+                l2.pack()
+
+                
+                e1 = Entry(admin)
+                e1.pack()
+
+
+                b1 = Button( admin, text='Delete' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [ deletedata()])
+                b1.pack(pady=10)
+                b3 = Button( admin, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
+                b3.pack()
+                b1 = Button( admin, text='Show Data' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [ ShowData()])
+                b1.pack(side="bottom")
+
+
+                
+                def deletedata():
+                    answer = m.askyesno("Are You Sure ?"," You Want to Delete Your account")
+                    if answer == TRUE:
+                     mycursorObject=my.cursor()
+                     Querycode = f"DELETE FROM dashboard.users WHERE users.id = {int(e1.get())}"
+                     mycursorObject.execute(Querycode)
+                     my.commit()
+                     m.showinfo("Done","User Deleted")
+
+                
+                def Destorypage():
+                 admin.destroy()
+                
+                
+                def ShowData():
+                    
+                    mycursor = my.cursor()
+
+                    mycursor.execute("SELECT * FROM dashboard.users")
+
+                    myresult = mycursor.fetchall()
+                    showddata = ""
+                    for i in myresult:
+                        # if(i == (1, 'admin', '1', 'admin', 1)):
+                        #     continue
+                        # else:
+                            # print(i)
+                            print(i)
+                            showddata +='Id is : '+str(i[0])+" "+'User is :' + i[1]+" "+'password is :' + i[2]+" "+'Email iS : ' +i[3]+" "+'Usertype is : '+ str(i[4])+"\n"
+                            
+                            
+                    l1.config(text=showddata)
+
+
+
+                
             #         
             #         else:
             #           m.showwarning("Match_Password","write Same Password")
@@ -261,7 +354,7 @@ try:
             Login = Tk()
             Login.title(string='Register Page')
 
-            Login.geometry('300x400') 
+            Login.geometry('300x500') 
 
             def Destorypage():
                 Login.destroy()
@@ -282,6 +375,8 @@ try:
             b1.pack( pady=10)
             b2 = Button( Login, text='Back' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), All_page()])
             b2.pack(pady=110)
+            # b2 = Button( Login, text='admin' ,width=15 ,height=1,bg='green',fg='white',command=lambda: [Destorypage(), adminboard()])
+            # b2.pack(side="left")
 
 
             w.destroy()
